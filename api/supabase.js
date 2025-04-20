@@ -1,12 +1,13 @@
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
+// api/supabase.js
+const supabase = supabase.createClient(
+  'https://gohdorzuynqoiceuncjh.supabase.co',   // Replace with your Supabase URL
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdvaGRvcnp1eW5xb2ljZXVuY2poIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQyNTM0ODgsImV4cCI6MjA1OTgyOTQ4OH0.5dL7wLnghdIsO-IDWJMNEZhnc55hcdKvVZWQPtY2KHk'  // Replace with your Supabase anon key
 );
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
 
   const { action, data } = req.body;
 
@@ -16,8 +17,6 @@ export default async function handler(req, res) {
         return handleSignup(data, res);
       case 'login':
         return handleLogin(data, res);
-      case 'getUser':
-        return handleGetUser(res);
       case 'logout':
         return handleLogout(res);
       default:
@@ -28,26 +27,29 @@ export default async function handler(req, res) {
   }
 }
 
+// Signup user
 async function handleSignup({ email, password }, res) {
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) throw error;
-  return res.status(200).json(data);
+  const { user, error } = await supabase.auth.signUp({ email, password });
+  if (error) {
+    return res.status(400).json({ error: error.message });
+  }
+  return res.status(200).json(user);
 }
 
+// Login user
 async function handleLogin({ email, password }, res) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) throw error;
-  return res.status(200).json(data);
+  const { user, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) {
+    return res.status(400).json({ error: error.message });
+  }
+  return res.status(200).json(user);
 }
 
-async function handleGetUser(res) {
-  const { data, error } = await supabase.auth.getUser();
-  if (error) throw error;
-  return res.status(200).json(data);
-}
-
+// Logout user
 async function handleLogout(res) {
   const { error } = await supabase.auth.signOut();
-  if (error) throw error;
+  if (error) {
+    return res.status(400).json({ error: error.message });
+  }
   return res.status(200).json({ success: true });
 }

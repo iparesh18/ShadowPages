@@ -1,3 +1,7 @@
+// main.js
+
+import { supabaseUrl, supabaseAnonKey } from './api/supabase.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   // Variables
   const logoutBtn = document.getElementById('logout-btn');
@@ -20,15 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const deleteNoteBtn = document.getElementById('delete-note-btn');
   let notes = [];
 
+  // Initialize Supabase client
+  const { createClient } = supabase;
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
   // Fetch user info
   async function loadUser() {
-    const { data, error } = await fetch('/api/supabase', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'getUser'
-      })
-    }).then(res => res.json());
+    const { data, error } = await supabase.auth.getUser();
 
     if (error || !data.user) {
       alert("Not logged in. Redirecting to login...");
@@ -50,11 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Logout functionality
   logoutBtn.addEventListener('click', async () => {
-    const { error } = await fetch('/api/supabase', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'logout' })
-    }).then(res => res.json());
+    const { error } = await supabase.auth.signOut();
 
     if (error) {
       alert(`Error: ${error.message}`);
@@ -63,13 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Fetch notes from backend API
+  // Fetch notes from Supabase
   async function fetchNotes(userId) {
-    const { data, error } = await fetch('/api/supabase', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'fetchNotes', data: { userId } })
-    }).then(res => res.json());
+    const { data, error } = await supabase
+      .from('notes')  // Assuming your notes table is named 'notes'
+      .select('*')
+      .eq('user_id', userId);
 
     if (error) {
       alert(`Error fetching notes: ${error.message}`);
@@ -122,11 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Delete note
   async function deleteNote(id) {
-    const { error } = await fetch('/api/supabase', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'deleteNote', data: { noteId: id, userId: data.user.id } })
-    }).then(res => res.json());
+    const { error } = await supabase
+      .from('notes')
+      .delete()
+      .eq('id', id);
 
     if (error) {
       alert(`Error: ${error.message}`);
@@ -146,18 +142,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!title || !content) return alert('Please provide both title and content.');
 
-    const { error } = await fetch('/api/supabase', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'saveNote',
-        data: { title, content, userId: data.user.id, editingId }
-      })
-    }).then(res => res.json());
+    if (editingId) {
+      // Update existing note
+      const { error } = await supabase
+        .from('notes')
+        .update({ title, content })
+        .eq('id', editingId);
 
-    if (error) {
-      alert(`Error saving note: ${error.message}`);
-      return;
+      if (error) {
+        alert(`Error saving note: ${error.message}`);
+        return;
+      }
+    } else {
+      // Insert new note
+      const { error } = await supabase
+        .from('notes')
+        .insert([{ title, content, user_id: data.user.id }]);
+
+      if (error) {
+        alert(`Error saving note: ${error.message}`);
+        return;
+      }
     }
 
     notePopup.style.display = 'none';
