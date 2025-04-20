@@ -37,6 +37,13 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
+  // Optional email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    alert("Please enter a valid email address.");
+    return;
+  }
+
   toggleLoading(true);
 
   try {
@@ -72,18 +79,22 @@ form.addEventListener("submit", async (e) => {
 
 // 🔚 Logout (if ever shown)
 logoutBtn.addEventListener("click", async () => {
-  const res = await fetch("/api/supabase", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "logout" })
-  });
+  try {
+    const res = await fetch("/api/supabase", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "logout" })
+    });
 
-  const result = await res.json();
+    const result = await res.json();
 
-  if (!res.ok) {
-    alert("Logout failed: " + result.error);
-  } else {
-    alert("Logged out!");
-    logoutBtn.style.display = "none";
+    if (!res.ok) {
+      alert("Logout failed: " + result.error);
+    } else {
+      alert("Logged out!");
+      logoutBtn.style.display = "none";
+    }
+  } catch (err) {
+    alert("Unexpected error: " + err.message);
   }
 });

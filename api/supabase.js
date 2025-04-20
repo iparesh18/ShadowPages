@@ -20,7 +20,6 @@ export default async function handler(req, res) {
         return handleGetUser(res);
       case 'logout':
         return handleLogout(res);
-      // Add your note & review actions here
       default:
         return res.status(400).json({ error: 'Unknown action' });
     }
