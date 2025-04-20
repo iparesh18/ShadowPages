@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShadowPages Chatbot</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'gilroy';
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    nav {
+      background-color: #1e1e1e;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #333;
+      position: relative;
+    }
+
+    /* nav h1 {
+      font-size: 1.2rem;
+    } */
+
+    .back-btn {
+      background: transparent;
+      border: 1px solid #888;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+      /* margin-right: -6rem; */
+      position: absolute;
+      right: 5%;
+    }
+
+    .back-btn:hover {
+      background-color: #333;
+    }
+
+  /* Main chatbot section */
+#chatbot-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  overflow: hidden;
+  background-color: #0e0e11;
+}
+
+/* Chat messages container */
+#chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Message base style */
+.message {
+  max-width: 75%;
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  line-height: 1.5;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  position: relative;
+  transition: all 0.2s ease-in-out;
+}
+
+/* User message style */
+.message.user {
+  align-self: flex-end;
+  background-color: #3e3e3e;
+  color: #a0e0ff;
+  border-bottom-right-radius: 0;
+  box-shadow: 0 2px 10px rgba(0, 92, 151, 0.3);
+  text-align: right;
+}
+
+/* AI message style */
+.message.ai {
+  align-self: flex-start;
+  background-color: #1f1f22;
+  color: #ddd;
+  border-bottom-left-radius: 0;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+  text-align: left;
+}
+
+/* Username labels (You / AI) */
+.message strong {
+  display: block;
+  font-size: 1.2rem;
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+
+/* Chat input section */
+#chat-input {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* User input box */
+#user-message {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: none;
+  background-color: #2a2a2a;
+  color: white;
+  font-size: 1rem;
+}
+
+/* Send button */
+#send-message {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#send-message:hover {
+  background-color: #357ab8;
+}
+
+/* Highlighted AI content */
+.message.ai strong {
+  color: #4f46e5;
+    font-size: 1.2rem;
+}
+
+.message.ai em {
+  color: #fbc2eb;
+  font-style: italic;
+}
+
+.message.ai code {
+  background: #222;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  color: #fff176;
+}
+
+/* Typing effect */
+.typing-dots {
+  font-size: 1.2em;
+  color: #fff;
+  display: inline-block;
+}
+
+.typing-dots:after {
+  content: '...';
+  animation: blink 1.5s infinite step-start;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+  <nav>
+    <h1 style="
+     
+    font-weight: bold;
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
+
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  ">ShadowPages</h1>
+    <button class="back-btn" onclick="window.location.href='main.html'">← Back to Notes</button>
+   
+    <div></div> <!-- Empty div to center the title -->
+  </nav>
+
+  <div id="chatbot-section">
+    <div id="chat-messages"></div>
+    <!-- Add this spinner HTML element below the chat messages -->
+<div id="loading-spinner" style="display: none; text-align: center;">
+    <div class="spinner"></div>
+  </div>
+  
+    <div id="chat-input">
+      <input type="text" id="user-message" placeholder="Ask me anything..." />
+      <button id="send-message">Send</button>
+    </div>
+  </div>
+
+  <script>
+const chatMessages = document.getElementById('chat-messages');
+const userInput = document.getElementById('user-message');
+const sendBtn = document.getElementById('send-message');
+const loadingSpinner = document.getElementById('loading-spinner'); // Loading spinner element
+
+function appendMessage(role, message) {
+  const div = document.createElement('div');
+  div.className = `message ${role}`;
+  div.innerHTML = `<strong>${role === 'user' ? 'You' : 'AI'}:</strong> ${role === 'ai' ? '<span class="typing-dots">...</span>' : message}`;
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Function to simulate typing effect with dots (while waiting for AI response)
+function showTypingEffect(messageDiv) {
+  const typingElement = messageDiv.querySelector('.typing-dots');
+  let dotCount = 0;
+
+  // Simulate typing by updating the dots every 500ms
+  const typingInterval = setInterval(() => {
+    dotCount = (dotCount + 1) % 4;  // Cycle between 0, 1, 2, 3 dots
+    typingElement.innerText = '.'.repeat(dotCount);  // Update the number of dots
+  }, 500);
+
+  return typingInterval;
+}
+
+sendBtn.addEventListener('click', async () => {
+  const message = userInput.value.trim();
+  if (!message) return;
+
+  appendMessage('user', message);
+  userInput.value = '';
+  sendBtn.disabled = true;
+  sendBtn.innerText = '...';
+
+  // Create a new div for AI's message and show the typing dots initially
+  const aiMessageDiv = document.createElement('div');
+  aiMessageDiv.className = 'message ai';
+  aiMessageDiv.innerHTML = `<strong>AI:</strong> <span class="typing-dots">...</span>`; // Show dots initially
+  chatMessages.appendChild(aiMessageDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  // Start the typing effect (dots) while waiting for the AI response
+  const typingInterval = showTypingEffect(aiMessageDiv);
+
+  try {
+    const res = await fetch('/api/openrouter', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ message }),
+});
+
+const data = await res.json();
+
+    const reply = data?.choices?.[0]?.message?.content || "No response.";
+
+    // Clear typing dots once the response is ready
+    clearInterval(typingInterval);
+    aiMessageDiv.querySelector('.typing-dots').innerText = ''; // Remove dots
+
+    // Show the AI's actual message
+    aiMessageDiv.innerHTML = `<strong>AI:</strong> ${reply}`;
+  } catch (err) {
+    clearInterval(typingInterval);
+    aiMessageDiv.querySelector('.typing-dots').innerText = ''; // Remove dots on error
+    appendMessage('ai', "Error fetching response.");
+  } finally {
+    sendBtn.disabled = false;
+    sendBtn.innerText = 'Send';
+  }
+});
+
+  </script>
+
+</body>
+</html>

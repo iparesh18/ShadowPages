@@ -1,0 +1,89 @@
+@font-face {
+  font-family: 'gilroy';
+  src: url(assets/fonts/Gilroy-ExtraBold.otf) format('opentype');
+  font-weight: 300;
+}
+@font-face {
+  font-family: 'gilroy';
+  src: url(assets/fonts/Gilroy-Light.otf);
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'gilroy';
+  background: #121212;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background: #1e1e1e;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 400px;
+}
+
+h2 {
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+input,
+button {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+}
+
+input {
+  background: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #444;
+  transition: border 0.3s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  background: #333;
+}
+
+button {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #3730a3;
+}
+
+#toggle-text {
+  text-align: center;
+  margin-top: 1rem;
+  color: #ccc;
+}
+
+#toggle-text a {
+  color: #818cf8;
+  text-decoration: none;
+}
+
+#toggle-text a:hover {
+  text-decoration: underline;
+}

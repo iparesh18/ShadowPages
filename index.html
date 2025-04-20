@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ShadowPages-Login / Signup</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div
+      class="headings"
+      style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <h1
+        style="
+          font-size: 3rem;
+          font-weight: bold;
+          background: linear-gradient(90deg, #6a11cb, #2575fc);
+
+          /* your gradient colors */
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        "
+      >
+        ShadowPages
+      </h1>
+      <p style="margin-top: -1.5rem; color: #b19cd9">
+        Ink your ideas in the dark.
+      </p>
+    </div>
+    <div class="container">
+      <h2 id="form-title">Sign Up</h2>
+      <form id="auth-form">
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <button type="submit" id="submit-btn">Sign Up</button>
+      </form>
+      <p id="toggle-text">
+        Already have an account? <a href="#" id="toggle-link">Log In</a>
+      </p>
+      <button id="logout-btn" style="display: none">Logout</button>
+    </div>
+
+    <div id="loading-overlay" class="hidden">
+      <div class="loader"></div>
+      <p>Processing...</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Main Dashboard</title>
+  <link rel="stylesheet" href="main.css" />
+</head>
+<body>
+  <main style="width: 100%;">
+    <nav>
+      <div class="nleft">
+        <h1 style="
+     
+        font-weight: bold;
+        background: linear-gradient(90deg, #6a11cb, #2575fc);
+
+        /* your gradient colors */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      ">ShadowPages</h1>
+      </div>
+      <div class="nright">
+        <a href="chat.html">AI Chat</a>
+      </div>
+    </nav>
+  
+    <div class="dashboard">
+      <header class="navbar">
+        <div class="user-info">
+          <img id="user-avatar" alt="Profile Picture" />
+          <p id="user-email">Loading...</p>
+        </div>
+        <button id="logout-btn">Logout</button>
+      </header>
+<div class="center" style="width: 100%; display: flex; align-items: center; justify-content: center; margin-top: 1rem;">
+  <h1 style="
+  font-size: 3rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #6a11cb, #2575fc);
+
+  /* your gradient colors */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+">Your Notes : </h1>
+</div>
+      <section style="width: 100%; height: 100vh; position: relative;">
+        <div id="notes-container" class="notes-wrapper">
+          
+          <p id="no-notes-msg">No previous notes</p>
+      
+          <div id="notes-list"></div>
+        </div>
+     
+        <!-- Floating Add Button -->
+        <button id="add-note-btn">+</button>
+      
+        <!-- Add Note Modal -->
+        <div id="note-popup" class="modal">
+          <div class="modal-content">
+            <span class="close" id="close-popup">&times;</span>
+            <h2 style="
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+  
+            /* your gradient colors */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          ">Add a Note</h2>
+            <input type="text" id="note-title-input" placeholder="Note Title" />
+            <textarea id="note-content-input" placeholder="Note Content"></textarea>
+            <button id="save-note-btn">Save Note</button>
+          </div>
+        </div>
+      
+        <!-- Full Note Modal -->
+        <div id="full-note-modal" class="modal">
+          <div class="modal-content">
+            <span class="close" id="close-full-modal">&times;</span>
+            <h2 id="full-note-title"></h2>
+            <p id="full-note-content"></p>
+            <p id="full-note-time" style="font-size: 0.9rem; color: #aaa;"></p>
+            <button id="edit-note-btn">Edit</button>
+            <button id="delete-note-btn">Delete</button>
+          </div>
+        </div>
+      </section>
+      
+    </div>
+  </main>
+  
+
+  
+  
+
+<!-- Load CryptoJS for MD5 hash -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<!-- Load your main.js as an ES module -->
+<script type="module" src="main.js"></script>
+
+</body>
+</html>

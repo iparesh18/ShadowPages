@@ -1,0 +1,152 @@
+@font-face {
+  font-family: 'gilroy';
+  src: url(assets/fonts/Gilroy-ExtraBold.otf) format('opentype');
+  font-weight: 300;
+}
+@font-face {
+  font-family: 'gilroy';
+  src: url(assets/fonts/Gilroy-Light.otf);
+}
+body {
+  font-family: 'gilroy';
+  margin: 0;
+  padding: 0;
+  background: #121212;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  color: #e0e0e0;
+}
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+form {
+  width: 100%;
+}
+
+.container {
+  background: #1e1e1e;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  width: 90%;
+  max-width: 400px;
+  transition: all 0.3s ease-in-out;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+input {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  background: #2c2c2c;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  color: #f0f0f0;
+}
+
+input::placeholder {
+  color: #999;
+}
+
+input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  background: #333;
+}
+
+button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #635dff;
+}
+
+#toggle-text {
+  text-align: center;
+  margin-top: 1rem;
+  color: #bbb;
+}
+
+#toggle-text a {
+  color: #8ab4f8;
+  text-decoration: none;
+}
+
+#toggle-text a:hover {
+  text-decoration: underline;
+}
+
+#logout-btn {
+  margin-top: 1rem;
+  background: #333;
+  color: #f0f0f0;
+  border: 1px solid #4f46e5;
+}
+
+#loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(18, 18, 18, 0.85);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#loading-overlay.hidden {
+  display: none;
+}
+
+#loading-overlay p {
+  color: white;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+}
+
+.loader {
+  border: 6px solid #333;
+  border-top: 6px solid #4f46e5;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
